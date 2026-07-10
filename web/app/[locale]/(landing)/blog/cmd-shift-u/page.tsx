@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       url: alternates.canonical,
       publishedTime: "2026-03-04T00:00:00Z",
     },
-    twitter: twitterSummary(title, description),
+    twitter: twitterSummary(locale, title, description),
     alternates,
   };
 }

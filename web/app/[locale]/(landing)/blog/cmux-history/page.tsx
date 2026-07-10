@@ -41,7 +41,7 @@ export async function generateMetadata({
       url: alternates.canonical,
       publishedTime: "2026-06-02T00:00:00Z",
     },
-    twitter: twitterSummary(title, description),
+    twitter: twitterSummary(locale, title, description),
     alternates,
   };
 }

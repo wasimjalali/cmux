@@ -53,6 +53,7 @@ struct WorkspaceCanvasHostView: View {
                             panel: panel,
                             workspace: workspace,
                             isWorkspaceVisible: isWorkspaceVisible,
+                            allowsPointerInput: isWorkspaceVisible && isWorkspaceInputActive,
                             portalPriority: portalPriority,
                             appearance: appearance,
                             windowAppearance: windowAppearance,
@@ -69,6 +70,7 @@ struct WorkspaceCanvasHostView: View {
                     guard let mount = mount as? CanvasPaneContentMount else { return }
                     mount.updatePresentation(
                         isFocused: isFocused,
+                        allowsPointerInput: isWorkspaceVisible && isWorkspaceInputActive,
                         showsInactiveOverlay: isSplit && !isFocused,
                         inactiveOverlayColor: appearance.unfocusedOverlayNSColor,
                         inactiveOverlayOpacity: appearance.unfocusedOverlayOpacity
@@ -99,6 +101,7 @@ struct WorkspaceCanvasHostView: View {
         panel: any Panel,
         workspace: Workspace?,
         isWorkspaceVisible: Bool,
+        allowsPointerInput: Bool,
         portalPriority: Int,
         appearance: PanelAppearance,
         windowAppearance: WindowAppearanceSnapshot,
@@ -109,7 +112,11 @@ struct WorkspaceCanvasHostView: View {
         }
         let workspaceId = workspace?.id ?? UUID()
         let paneId = workspace?.bonsplitPaneId(forPanelId: panel.id) ?? PaneID()
+        let presentation = CanvasHostedPanelPresentation(
+            allowsPointerInput: allowsPointerInput
+        )
         let content = CanvasHostedPanelContentView(
+            presentation: presentation,
             panel: panel,
             workspaceId: workspaceId,
             paneId: paneId,
@@ -129,7 +136,7 @@ struct WorkspaceCanvasHostView: View {
         // The pane's content container dictates the size; never let the
         // hosting view shrink to SwiftUI's ideal size.
         hosted.sizingOptions = []
-        return .hosted(panel, hosted)
+        return .hosted(panel, hosted, presentation)
     }
 }
 

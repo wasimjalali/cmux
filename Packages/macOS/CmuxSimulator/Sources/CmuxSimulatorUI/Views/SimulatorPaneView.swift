@@ -4,20 +4,24 @@ import SwiftUI
 public struct SimulatorPaneView: View {
     private let coordinator: SimulatorPaneCoordinator
     private let backgroundColor: Color
+    private let allowsPointerInput: Bool
     private let onRequestPanelFocus: @MainActor () -> Void
 
     /// Creates a native Simulator pane.
     /// - Parameters:
     ///   - coordinator: The panel-owned Simulator coordinator.
     ///   - backgroundColor: The host application's resolved pane background.
+    ///   - allowsPointerInput: Whether the current host owns pointer input.
     ///   - onRequestPanelFocus: Focuses the owning cmux panel before HID input.
     public init(
         coordinator: SimulatorPaneCoordinator,
         backgroundColor: Color,
+        allowsPointerInput: Bool,
         onRequestPanelFocus: @escaping @MainActor () -> Void = {}
     ) {
         self.coordinator = coordinator
         self.backgroundColor = backgroundColor
+        self.allowsPointerInput = allowsPointerInput
         self.onRequestPanelFocus = onRequestPanelFocus
     }
 
@@ -30,6 +34,7 @@ public struct SimulatorPaneView: View {
                 SimulatorDeviceStage(
                     coordinator: coordinator,
                     backgroundColor: backgroundColor,
+                    allowsPointerInput: allowsPointerInput,
                     onRequestPanelFocus: onRequestPanelFocus
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
